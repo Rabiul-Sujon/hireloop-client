@@ -25,10 +25,19 @@ export default function RootLayout({ children }) {
       data-theme="dark"
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      <body className="min-h-screen bg-black text-white antialiased flex flex-col">
+        
+        {/* 1. Global Fixed Floating Navbar */}
         <Navbar />
+        
+        {/* 2. Page Content Slot (Where page.js content like Hero will load) */}
+        <main className="flex-grow w-full relative z-10">
+          {children}
+        </main>
+        
+        {/* 3. Global App Footer Component */}
         <Footer />
-      <main>{children}</main>
+
       </body>
     </html>
   );
