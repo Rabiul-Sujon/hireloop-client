@@ -1,12 +1,39 @@
 "use client";
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Navbar() {
+  const router = useRouter();
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    fetch("/api/auth/get-session")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.user) setSession(data);
+      })
+      .catch(() => setSession(null));
+  }, []);
+
+  const handleSignOut = async () => {
+  await fetch("/api/auth/sign-out", { 
+    method: "POST",
+    credentials: "include"
+  });
+  setSession(null);
+  toast.success("Signed out successfully!");
+  setTimeout(() => router.push("/"), 1000);
+};
+
   return (
+    <>
+     <Toaster position="top-center" />
     <header className="w-full bg-black/40 backdrop-blur-md px-6 md:px-16 lg:px-24 py-4 fixed top-0 z-50 border-b border-neutral-900/30">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
+         
         
-        {/* 1. Left Side: Brand Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <div className="bg-gradient-to-tr from-purple-600 to-indigo-500 text-white p-1.5 rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
@@ -14,15 +41,12 @@ export default function Navbar() {
             </svg>
           </div>
           <span className="font-bold text-base leading-tight text-white tracking-tight">
-            Programming<br/>
-            <span className="text-xs font-medium block text-neutral-400 -mt-0.5">Hero</span>
+            HireLoop<br/>
+            <span className="text-xs font-medium block text-neutral-400 -mt-0.5">Jobs</span>
           </span>
         </Link>
 
-        {/* Right Action Group */}
         <div className="flex items-center gap-4">
-          
-          {/* 2. Center-Right: The Custom Floating Capsule Menu */}
           <nav className="bg-[#161618]/90 border border-neutral-800/40 rounded-xl px-2 py-1.5 hidden md:flex items-center">
             <ul className="flex items-center gap-1 text-sm font-medium text-neutral-400">
               <li>
@@ -41,28 +65,42 @@ export default function Navbar() {
                 </Link>
               </li>
 
-              {/* Elegant thin divider line */}
               <div className="w-[1px] h-4 bg-neutral-800 self-center mx-2" />
 
-              {/* Sign In Links */}
-              <li>
-                <Link href="/sign-in" className="px-4 py-2 text-indigo-400 hover:text-indigo-300 transition-colors block">
-                  Sign In
-                </Link>
-              </li>
+              {session ? (
+                <li>
+                  <button
+                    onClick={handleSignOut}
+                    className="px-4 py-2 text-indigo-400 hover:text-indigo-300 transition-colors block"
+                  >
+                    Sign Out
+                  </button>
+                </li>
+              ) : (
+                <li>
+                  <Link href="/auth/signin" className="px-4 py-2 text-indigo-400 hover:text-indigo-300 transition-colors block">
+                    Sign In
+                  </Link>
+                </li>
+              )}
             </ul>
           </nav>
 
-          {/* 3. Far Right: Accent CTA Button */}
-          <Link 
-            href="/get-started" 
-            className="bg-white text-black text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-neutral-200 transition-all shadow-lg active:scale-95 block"
-          >
-            Get Started
-          </Link>
-          
+          {session ? (
+            <span className="text-sm text-white font-medium px-2">
+              👋 {session.user.name}
+            </span>
+          ) : (
+            <Link 
+              href="/auth/signup" 
+              className="bg-white text-black text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-neutral-200 transition-all shadow-lg active:scale-95 block"
+            >
+              Get Started
+            </Link>
+          )}
         </div>
       </div>
     </header>
+    </>
   );
 }
