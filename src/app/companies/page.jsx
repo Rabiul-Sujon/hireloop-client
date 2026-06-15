@@ -9,15 +9,9 @@ const allCompanies = [
   { id: 4, name: "OpenAI", logo: "🔵", industry: "AI", location: "San Francisco, CA", employees: "2k+", jobs: 12, verified: true },
   { id: 5, name: "Netflix", logo: "🔴", industry: "Tech", location: "Los Gatos, CA", employees: "13k+", jobs: 24, verified: true },
   { id: 6, name: "Figma", logo: "🟡", industry: "Developer Tools", location: "San Francisco, CA", employees: "1k+", jobs: 8, verified: true },
-  { id: 7, name: "Spotify", logo: "🟢", industry: "Tech", location: "Stockholm, Sweden", employees: "9k+", jobs: 15, verified: true },
-  { id: 8, name: "Airbnb", logo: "🔴", industry: "Tech", location: "San Francisco, CA", employees: "7k+", jobs: 22, verified: true },
-  { id: 9, name: "Shopify", logo: "🟢", industry: "E-Commerce", location: "Ottawa, Canada", employees: "10k+", jobs: 28, verified: true },
-  { id: 10, name: "Notion", logo: "⚫", industry: "Developer Tools", location: "San Francisco, CA", employees: "800+", jobs: 6, verified: true },
-  { id: 11, name: "Vercel", logo: "⚫", industry: "Developer Tools", location: "San Francisco, CA", employees: "400+", jobs: 5, verified: true },
-  { id: 12, name: "Anthropic", logo: "🟣", industry: "AI", location: "San Francisco, CA", employees: "600+", jobs: 9, verified: true },
 ];
 
-const industries = ["All", "Tech", "Fintech", "AI", "Developer Tools", "E-Commerce"];
+const industries = ["All", "Tech", "Fintech", "AI", "Developer Tools"];
 
 export default function CompaniesPage() {
   const [selectedIndustry, setSelectedIndustry] = useState("All");
@@ -72,10 +66,9 @@ export default function CompaniesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredCompanies.map((company) => (
-              <Link
+              <div
                 key={company.id}
-                href={`/companies/${company.id}`}
-                className="bg-[#0d0d0f] border border-neutral-800/60 rounded-2xl p-6 hover:border-indigo-500/40 hover:-translate-y-1 transition-all duration-200 group block"
+                className="bg-[#0d0d0f] border border-neutral-800/60 rounded-2xl p-6 hover:border-indigo-500/40 hover:-translate-y-1 transition-all duration-200 group"
               >
                 {/* Logo & Name */}
                 <div className="flex items-start justify-between mb-4">
@@ -116,7 +109,7 @@ export default function CompaniesPage() {
                     →
                   </span>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}
